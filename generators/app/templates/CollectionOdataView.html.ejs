@@ -27,7 +27,8 @@
                on-data-required="metadata.load()">
             <thead>
                 <tr>
-                    <th class="column-title" field-name="" display-name="{{'<%= comeBackUrl %>.name'|translate}}" enable-filtering="false" ></th>
+                    <% fields.forEach(function(item) { %>
+                    <th class="column-title" field-name="<%= item %>" display-name="{{'<%= comeBackUrl %>.<%= lowerCaseFirst(item) %>'|translate}}" enable-filtering="false" ></th><% }); %>
                     <th cell-width="110px">
                         <div class="tr-ng-title"></div>
                     </th>

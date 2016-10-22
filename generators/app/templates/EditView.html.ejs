@@ -1,17 +1,18 @@
 ﻿<div ng-controller="<%= editControllerName %> as controller">
     <div class="page-title">
         <div class="title_left">
-            <span ng-show="item.<%= id %>">{{'<%= editViewName %>.pageTitleEdit'|translate}}</span>
-            <span ng-hide="item.<%= id %>">{{'<%= editViewName %>.pageTitleAdd'|translate}}</span>
+            <span ng-show="item.<%= id %>">{{'<%= editViewUrl %>.pageTitleEdit'|translate}}</span>
+            <span ng-hide="item.<%= id %>">{{'<%= editViewUrl %>.pageTitleAdd'|translate}}</span>
         </div>
     </div>
 
     <div class="col-md-12" style="padding-bottom: 10px;">
         <form role="form" action="#" name="controller.form">
+            <% fields.forEach(function(item) { %>
             <div class="form-group" moloko-control-show=''>
-                <label class="control-label">{{'<%= editViewName %>.'|translate}}</label>
-                <input type="text" ng-model="" moloko-control-readonly='' placeholder="" class="form-control" required>
-            </div>
+                <label class="control-label">{{'<%= editViewUrl %>.<%= lowerCaseFirst(item) %>'|translate}}</label>
+                <input type="text" ng-model="<%= item %>" moloko-control-readonly='' placeholder="<%= lowerCaseFirst(item) %>Plch" class="form-control" required>
+            </div><% }); %>
         </form>
     </div>
     <div class="margiv-top-10" style="padding-left: 15px;">

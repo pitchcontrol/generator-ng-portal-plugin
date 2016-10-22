@@ -4,7 +4,8 @@ var chalk = require('chalk');
 var yosay = require('yosay');
 var plur = require('plur');
 var changeCase = require('change-case')
-
+var EditPage = require('./utils/localization').EditPage;
+var ListPage = require('./utils/localization').ListPage;
 
 Array.prototype.addRange = function (objects) {
 	for (var i of objects) {
@@ -128,6 +129,11 @@ module.exports = yeoman.Base.extend({
 			default: function (answers) {
 				return 'edit' + changeCase.upperCaseFirst(answers.entityName) + 'Controller';
 			}
+		}, {
+			name: 'fields',
+			type: 'input',
+			message: 'Название полей через запятую, например: BannerID,Name,Description'
+
 		}];
 
 		this.prompt(prompts, function (props) {
@@ -136,12 +142,17 @@ module.exports = yeoman.Base.extend({
 			this.props.comeBackUrl = '/' + changeCase.upperCaseFirst(plur(this.props.entityName));
 			this.props.editViewUrl = '/Edit' + changeCase.upperCaseFirst(this.props.entityName);
 			this.props.editViewName = this.props.editViewUrl + '.html';
-			
+			this.props.lowerCaseFirst = changeCase.lowerCaseFirst;
+			//Поля
+			this.props.fields = this.props.fields ? this.props.fields.split(',') : [];
 			done();
 		}.bind(this));
 	},
 
 	writing: function () {
+		let localizationRu = {};
+		let localizationEn = {};
+
 		//Добавление сервиса
 		if (this.props.views.includes('service')) {
 			this.fs.copyTpl(
@@ -152,6 +163,9 @@ module.exports = yeoman.Base.extend({
 		};
 		//Добавление редактирования
 		if (this.props.views.includes('edit')) {
+			localizationRu[this.props.editViewUrl] = new EditPage(this.props.fields);
+			localizationEn[this.props.editViewUrl] = new EditPage(this.props.fields);
+
 			let template = this.props.useOdata === true ? 'editOdataController.js' : 'editController.js';
 			this.fs.copyTpl(
 				this.templatePath(template),
@@ -159,20 +173,23 @@ module.exports = yeoman.Base.extend({
 				this.props
 			);
 			this.fs.copyTpl(
-				this.templatePath('EditView.html'),
+				this.templatePath('EditView.html.ejs'),
 				this.destinationPath(`Views/${this.props.editViewName}`),
 				this.props
 			);
 		};
 		//Добавление списка
 		if (this.props.views.includes('list')) {
+			localizationRu[this.props.comeBackUrl] = new ListPage(this.props.fields);
+			localizationEn[this.props.comeBackUrl] = new ListPage(this.props.fields);
+
 			let template = this.props.useOdata === true ? 'collectionOdataController.ejs' : 'collectionController.ejs';
 			this.fs.copyTpl(
 				this.templatePath(template),
 				this.destinationPath(`Scripts/ClientControllers/${this.props.controllerName}.js`),
 				this.props
 			);
-			template = this.props.useOdata === true ? 'CollectionOdataView.html' : 'CollectionView.html';
+			template = this.props.useOdata === true ? 'CollectionOdataView.html.ejs' : 'CollectionView.html';
 			this.fs.copyTpl(
 				this.templatePath(template),
 				this.destinationPath(`Views/${this.props.comeBackUrl}.html`),
@@ -198,12 +215,16 @@ module.exports = yeoman.Base.extend({
 			};
 		};
 		//Локализация
-		this.fs.copyTpl(
-			this.templatePath('locale-ru.json'),
-			this.destinationPath(`Localization/locale-ru.json`), {});
-		this.fs.copyTpl(
-			this.templatePath('locale-en.json'),
-			this.destinationPath(`Localization/locale-en.json`), {});
+		if (!this.fs.exists(`Localization/locale-ru.json`))
+			this.fs.writeJSON(`Localization/locale-ru.json`, localizationRu);
+		else {
+			this.fs.extendJSON(`Localization/locale-ru.json`, localizationRu);
+		}
+		if (!this.fs.exists(`Localization/locale-en.json`))
+			this.fs.writeJSON(`Localization/locale-en.json`, localizationEn);
+		else {
+			this.fs.extendJSON(`Localization/locale-en.json`, localizationEn);
+		}
 	},
 
 	install: function () {
