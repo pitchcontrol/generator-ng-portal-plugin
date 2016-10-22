@@ -1,0 +1,21 @@
+﻿<div ng-controller="<%= editControllerName %> as controller">
+    <div class="page-title">
+        <div class="title_left">
+            <span ng-show="item.<%= id %>">{{'<%= editViewName %>.pageTitleEdit'|translate}}</span>
+            <span ng-hide="item.<%= id %>">{{'<%= editViewName %>.pageTitleAdd'|translate}}</span>
+        </div>
+    </div>
+
+    <div class="col-md-12" style="padding-bottom: 10px;">
+        <form role="form" action="#" name="controller.form">
+            <div class="form-group" moloko-control-show=''>
+                <label class="control-label">{{'<%= editViewName %>.'|translate}}</label>
+                <input type="text" ng-model="" moloko-control-readonly='' placeholder="" class="form-control" required>
+            </div>
+        </form>
+    </div>
+    <div class="margiv-top-10" style="padding-left: 15px;">
+        <button ng-click="controller.save()" class="btn btn-success" ng-disabled="controller.form.$invalid" busy-lock>{{'commonButtons.save'|translate}}</button>
+        <a class="btn btn-default" href="<%= comeBackUrl %>">{{'commonButtons.cancel'|translate}}</a>
+    </div>
+</div>

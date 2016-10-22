@@ -1,0 +1,36 @@
+﻿<div ng-controller="<%= controllerName %> as controller">
+    <div class="page-title">
+        <div class="title_left">
+            <span translate="{{'<%= comeBackUrl %>.pageTitle'}}"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4"></div>
+        <div class="col-md-4" style="text-align:right;">
+            <a class="btn btn-success" href="#<%= editViewUrl %>"><span class="glyphicon glyphicon-plus" style="margin-right:10px;"></span>{{'<%= comeBackUrl %>.addBtn'|translate}}</a>
+            <button class="btn btn-primary" ng-click="controller.refresh()"><span class="glyphicon glyphicon-refresh"></span></button>
+        </div>
+    </div>
+    <div>
+        <table class="table table-striped responsive-utilities jambo_table">
+            <thead>
+                <tr>
+                    <th>{{'<%= comeBackUrl %>.name'|translate}}</th>
+                    <th class="column-title" width="55px">
+                        <div class="tr-ng-title"></div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-ng-repeat="item in dataset">
+                	<td>{{item}}</td>
+                    <td>
+                        <a ng-href="#<%= editViewUrl %>{{item.<%= id %>}}"><i class="glyphicon glyphicon-pencil"></i></a>
+                        <button ng-click="delete(item)" class="btn btn-danger"><i class="glyphicon glyphicon-trash"></i></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

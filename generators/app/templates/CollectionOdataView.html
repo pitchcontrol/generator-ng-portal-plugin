@@ -1,0 +1,66 @@
+﻿<div ng-controller="<%= controllerName %> as controller">
+    <div class="page-title">
+        <div class="title_left">
+            <span translate="{{'<%= comeBackUrl %>.pageTitle'}}"></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+			<translate-input-clear ng-model="metadata.gridState.filter" placeholder="filterPlch" />
+		</div>
+        <div class="col-md-4"></div>
+        <div class="col-md-4" style="text-align:right;">
+            <a class="btn btn-success" href="#<%= editViewUrl %>"><span class="glyphicon glyphicon-plus" style="margin-right:10px;"></span>{{'<%= comeBackUrl %>.addBtn'|translate}}</a>
+            <button class="btn btn-primary" ng-click="metadata.load()"><span class="glyphicon glyphicon-refresh"></span></button>
+        </div>
+    </div>
+	<empty-result count="metadata.dataset['odata.count']" filter="metadata.gridState.filter" />
+    <div ng-hide="metadata.gridState.filter && metadata.dataset['odata.count']==0">
+        <table tr-ng-grid=""
+                page-items="metadata.gridState.maxSize"
+               items="metadata.dataset.value"
+               selection-mode="None"
+               class="table table-striped responsive-utilities jambo_table"
+               filter-by="metadata.gridState.filter"
+               order-by="metadata.gridState.orderBy"
+               order-by-reverse="metadata.gridState.orderByReversed"
+               on-data-required="metadata.load()">
+            <thead>
+                <tr>
+                    <th class="column-title" field-name="" display-name="{{'<%= comeBackUrl %>.name'|translate}}" enable-filtering="false" ></th>
+                    <th cell-width="110px">
+                        <div class="tr-ng-title"></div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <a class="btn btn-primary" href="#<%= editViewUrl %>/{{gridItem.<%= id %>}}" style="margin-right: 5px;"><i class="glyphicon glyphicon-pencil"></i></a>&nbsp;
+                        <button data-toggle="modal" ng-click="metadata.delete(gridItem)" class="btn btn-danger"><i class="glyphicon glyphicon-trash"></i></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+	<uib-pagination total-items="metadata.dataset['odata.count']" ng-click="metadata.load()" ng-hide="metadata.gridState.filter && metadata.dataset['odata.count']==0"
+		ng-model="metadata.gridState.currentPage" max-size="5" items-per-page="metadata.gridState.maxSize" previous-text="{{'pagination.previous'|translate}}"
+		next-text="{{'pagination.next'|translate}}" first-text="{{'pagination.first'|translate}}" last-text="{{'pagination.last'|translate}}"
+		class="pagination-sm pull-right" boundary-links="true" rotate="false" num-pages="numPages">
+	</uib-pagination>
+    <div class="input-group-sm" ng-hide="metadata.gridState.filter && metadata.dataset['odata.count']==0">
+        <select class="col-md-4 form-control pull-right pagination-sm" ng-model="metadata.gridState.maxSize" ng-options="size as size for size in metadata.paging.pageSizes" />
+    </div>
+
+    <style>
+        tfoot {
+            display: none !important;
+        }
+
+        select {
+            max-width: 100px;
+            border-radius: 0px;
+            margin-top: 20px;
+        }
+    </style>
+</div>
