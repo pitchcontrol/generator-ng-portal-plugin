@@ -166,7 +166,7 @@ module.exports = yeoman.Base.extend({
 		};
 		//Добавление списка
 		if (this.props.views.includes('list')) {
-			let template = this.props.useOdata === true ? 'collectionOdataController.js' : 'collectionController.js';
+			let template = this.props.useOdata === true ? 'collectionOdataController.ejs' : 'collectionController.ejs';
 			this.fs.copyTpl(
 				this.templatePath(template),
 				this.destinationPath(`Scripts/ClientControllers/${this.props.controllerName}.js`),
